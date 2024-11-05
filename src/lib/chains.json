@@ -1,0 +1,50 @@
+{
+  "84532": {
+    "chainId": "0x14a34",
+    "chainName": "Base Sepolia Testnet",
+    "rpcUrls": [
+      "https://sepolia.base.org"
+    ],
+    "iconUrls": [],
+    "nativeCurrency": {
+      "name": "wETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "blockExplorerUrls": [
+      "https://sepolia-explorer.base.org"
+    ]
+  },
+  "8453": {
+    "chainId": "0x2105",
+    "chainName": "Base",
+    "rpcUrls": [
+      "https://mainnet.base.org"
+    ],
+    "iconUrls": [],
+    "nativeCurrency": {
+      "name": "wETH",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "blockExplorerUrls": [
+      "https://basescan.org"
+    ]
+  },
+  "11155111": {
+    "chainId": "0xaa36a7",
+    "chainName": "Sepolia Testnet",
+    "rpcUrls": [
+      "https://sepolia.infura.io/v3/"
+    ],
+    "iconUrls": [],
+    "nativeCurrency": {
+      "name": "ETHER",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "blockExplorerUrls": [
+      "https://sepolia-etherscan.io"
+    ]
+  }
+}
