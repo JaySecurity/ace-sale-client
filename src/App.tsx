@@ -1,3 +1,4 @@
+import { metamask_batch } from '@metamask/sdk';
 import { useSDK } from '@metamask/sdk-react';
 import { useEffect, useState } from 'react';
 import CodeInput from './components/codeInput/CodeInput';
@@ -98,27 +99,18 @@ const App = () => {
       return;
     }
     try {
+      const batchRequests = [];
       const order: Promise<OrderResponse> = await createOrder(
         tokenQty,
         payments[paymentMethod]
       );
       if (chainId !== stringToHex(order.ChainID)) {
-        try {
-          const hexId = `0x${parseInt(order.ChainID).toString(16)}`;
+        const hexId = `0x${parseInt(order.ChainID).toString(16)}`;
 
-          let result = await provider.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: hexId }],
-          });
-          console.log(result);
-        } catch (err) {
-          if (err?.message.includes('Unrecognized chain ID ')) {
-            await provider.request({
-              method: 'wallet_addEthereumChain',
-              params: [{ ...chains[order.ChainID] }],
-            });
-          }
-        }
+        batchRequests.push({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: hexId }],
+        });
       }
       const params = {
         from: account,
@@ -132,13 +124,22 @@ const App = () => {
       // params.gas = await estimateGas(params);
       params.maxFeePerGas = gasData.maxFeePerGas;
       params.maxPriorityFeePerGas = gasData.maxPriorityFeePerGas;
-      const txHash = await provider.request({
+      batchRequests.push({
         method: 'eth_sendTransaction',
         params: [params],
       });
+      const txHash = await metamask_batch(batchRequests);
       console.log(txHash);
     } catch (err) {
-      console.log(err);
+      if (
+        err instanceof Error &&
+        err?.message.includes('Unrecognized chain ID ')
+      ) {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [{ ...chains[order.ChainID] }],
+        });
+      }
     }
   };
 
