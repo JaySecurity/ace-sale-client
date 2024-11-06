@@ -88,6 +88,7 @@ export async function createOrder(
   quantity: number,
   paymentMethod: number
 ): Promise<OrderResponse> {
+  console.log(`Qty: ${quantity} - Method: ${paymentMethod}`);
   const url = `${BASE_URL}${ENDPOINTS.ORDER}`;
   const body = {
     Quantity: quantity,

@@ -8,8 +8,8 @@ interface Props {
   isVerified: boolean;
   paymentType: string;
   setMethod: (s: string) => void;
-  qty: number;
-  setQty: (n: number) => void;
+  qty: number | undefined;
+  setQty: (n: number | undefined) => void;
   tokenQty: number;
 }
 const PurchaseInput = ({
@@ -27,9 +27,6 @@ const PurchaseInput = ({
   const connect = async () => {
     try {
       await sdk?.connect();
-      // if (accounts && accounts?.length > 0) {
-      //   accountSet(accounts?.[0]);
-      // }
     } catch (err) {
       console.log(err);
     }
@@ -43,7 +40,7 @@ const PurchaseInput = ({
   const handleQtyChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e?.target?.value;
     if (val === '') {
-      setQty(0);
+      setQty(undefined);
     } else if (!isNaN(parseFloat(val))) {
       setQty(parseFloat(val));
     }
