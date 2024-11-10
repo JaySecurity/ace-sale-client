@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
-const CodeInput = ({ setCode, setCodeSent }) => {
+type InputProps = {
+  setCode: (value: string) => void;
+  setCodeSent: (val: boolean) => void;
+};
+const CodeInput = ({ setCode, setCodeSent }: InputProps) => {
   const [value, valueSet] = useState<string>('');
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     valueSet(e?.target?.value || '');
   };
 

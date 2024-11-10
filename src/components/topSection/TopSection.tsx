@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
+import { StoreData } from '../../lib/types';
 
-const TopSection = ({ storeData }) => {
+type InputProps = {
+  storeData: StoreData;
+};
+
+const TopSection = ({ storeData }: InputProps) => {
   const [timer, timerSet] = useState({
     now: Date.now(),
     days: 0,
@@ -26,7 +31,7 @@ const TopSection = ({ storeData }) => {
           endDate: storeData.endDate,
         };
         timer.now = Date.now();
-        timer.timeRemaining = Math.max(0, timer.endDate - timer.now); // Ensure timeRemaining is never negative
+        timer.timeRemaining = Math.max(0, timer.endDate.getTime() - timer.now); // Ensure timeRemaining is never negative
 
         timer.days = Math.floor(timer.timeRemaining / (1000 * 60 * 60 * 24));
         timer.hours = Math.floor(
@@ -38,9 +43,10 @@ const TopSection = ({ storeData }) => {
         timer.seconds = Math.floor((timer.timeRemaining % (1000 * 60)) / 1000);
         return timer;
       });
-      progressBar.style.width = `${Math.ceil(
-        (storeData.soldAmount / storeData.maxSupply) * 100
-      )}%`;
+      if (progressBar)
+        progressBar.style.width = `${Math.ceil(
+          (storeData.soldAmount / storeData.maxSupply) * 100
+        )}%`;
     }, 1000);
     return () => clearInterval(countdownInterval);
   }, [storeData]);

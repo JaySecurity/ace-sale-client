@@ -7,7 +7,7 @@ import TopSection from './components/topSection/TopSection';
 import { createOrder, getGasData, verifyEmail } from './lib/api';
 import chains from './lib/chains.json';
 import { init } from './lib/saleInfo';
-import { OrderResponse, StoreData } from './lib/types';
+import { StoreData } from './lib/types';
 
 const App = () => {
   const payments = {
@@ -98,10 +98,7 @@ const App = () => {
     }
     try {
       const batchRequests = [];
-      const order: Promise<OrderResponse> = await createOrder(
-        tokenQty,
-        payments[paymentMethod]
-      );
+      const order = await createOrder(tokenQty, payments[paymentMethod]);
       if (chainId !== stringToHex(order.ChainID)) {
         const hexId = `0x${parseInt(order.ChainID).toString(16)}`;
         console.log('Hex Chain Id: ', hexId);
@@ -145,44 +142,46 @@ const App = () => {
   };
 
   return (
-    <div className='app'>
-      <div className='logo'>
-        <img
-          src='https://cdn.prod.website-files.com/6616403cebb1b03d5009fea9/66c75c6ab09d241ea653066d_LOGO%20navbar.svg'
-          alt='Logo'
-        />
-      </div>
-      <div className='widget'>
-        <TopSection storeData={storeData} />
-        <div className='bottom-section' id='purchaseSection'>
-          {showPurchase && (
-            <PurchaseInput
-              sendTx={sendTx}
-              storeData={storeData}
-              isVerified={isVerified}
-              paymentType={paymentMethod}
-              setMethod={paymentMethodSet}
-              qty={qty}
-              setQty={qtySet}
-              tokenQty={tokenQty}
-            />
-          )}
-          {account && !isVerified && (
-            <>
-              {codeSent ? (
-                <CodeInput setCode={codeSet} setCodeSent={codeSentSet} />
-              ) : (
-                <EmailInput
-                  setEmail={emailSet}
-                  setCodeSent={codeSentSet}
-                  wallet={account}
-                />
-              )}
-            </>
-          )}
+    storeData && (
+      <div className='app'>
+        <div className='logo'>
+          <img
+            src='https://cdn.prod.website-files.com/6616403cebb1b03d5009fea9/66c75c6ab09d241ea653066d_LOGO%20navbar.svg'
+            alt='Logo'
+          />
+        </div>
+        <div className='widget'>
+          <TopSection storeData={storeData} />
+          <div className='bottom-section' id='purchaseSection'>
+            {showPurchase && (
+              <PurchaseInput
+                sendTx={sendTx}
+                storeData={storeData}
+                isVerified={isVerified}
+                paymentType={paymentMethod}
+                setMethod={paymentMethodSet}
+                qty={qty}
+                setQty={qtySet}
+                tokenQty={tokenQty}
+              />
+            )}
+            {account && !isVerified && (
+              <>
+                {codeSent ? (
+                  <CodeInput setCode={codeSet} setCodeSent={codeSentSet} />
+                ) : (
+                  <EmailInput
+                    setEmail={emailSet}
+                    setCodeSent={codeSentSet}
+                    wallet={account}
+                  />
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    )
   );
 };
 

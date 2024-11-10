@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { connectWithEmail } from '../../lib/api';
-const EmailInput = ({ setEmail, setCodeSent, wallet }) => {
+
+type InputProps = {
+  setEmail: (value: string) => void;
+  setCodeSent: (val: boolean) => void;
+  wallet: string;
+};
+
+const EmailInput = ({ setEmail, setCodeSent, wallet }: InputProps) => {
   const [value, valueSet] = useState<string>('');
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     valueSet(e?.target?.value || '');
   };
 
