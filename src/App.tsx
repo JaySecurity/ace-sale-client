@@ -5,7 +5,6 @@ import EmailInput from './components/emailInput/EmailInput';
 import PurchaseInput from './components/purchaseInput/PurchaseInput';
 import TopSection from './components/topSection/TopSection';
 import { createOrder, getGasData, verifyEmail } from './lib/api';
-import chains from './lib/chains.json';
 import { init } from './lib/saleInfo';
 import { StoreData } from './lib/types';
 
@@ -98,10 +97,12 @@ const App = () => {
     }
     try {
       const batchRequests = [];
-      const order = await createOrder(tokenQty, payments[paymentMethod]);
+      const order = await createOrder(
+        tokenQty,
+        payments[paymentMethod as keyof typeof payments]
+      );
       if (chainId !== stringToHex(order.ChainID)) {
         const hexId = `0x${parseInt(order.ChainID).toString(16)}`;
-        console.log('Hex Chain Id: ', hexId);
         batchRequests.push({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: hexId }],
@@ -133,10 +134,13 @@ const App = () => {
         err instanceof Error &&
         err?.message.includes('Unrecognized chain ID ')
       ) {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [{ ...chains[order.ChainID] }],
-        });
+        console.log(err?.message);
+        // await provider.request({
+        //   method: 'wallet_addEthereumChain',
+        //   params: [{ ...chains[order.ChainID as keyof typeof chains] }],
+        // });
+      } else {
+        console.log(err);
       }
     }
   };
